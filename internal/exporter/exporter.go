@@ -201,7 +201,8 @@ func (e *GPUExporter) Collect(metricCh chan<- prometheus.Metric) {
 
 	for _, currentRow := range currentTable.Rows {
 		uuid := strings.TrimPrefix(strings.ToLower(currentRow.QFieldToCells[uuidQField].RawValue), "gpu-")
-		uuid = hostname + "_" + currentRow.QFieldToCells[indexQField].RawValue + " (" + uuid + ")"
+		index := hostname + "_" + currentRow.QFieldToCells[indexQField].RawValue
+		uuid = index + " (" + uuid + ")"
 		name := currentRow.QFieldToCells[nameQField].RawValue
 		driverModelCurrent := currentRow.QFieldToCells[driverModelCurrentQField].RawValue
 		driverModelPending := currentRow.QFieldToCells[driverModelPendingQField].RawValue
@@ -209,7 +210,7 @@ func (e *GPUExporter) Collect(metricCh chan<- prometheus.Metric) {
 		driverVersion := currentRow.QFieldToCells[driverVersionQField].RawValue
 
 		infoMetric := prometheus.MustNewConstMetric(e.gpuInfoDesc, prometheus.GaugeValue,
-			1, uuid, name, driverModelCurrent,
+			1, uuid, index, name, driverModelCurrent,
 			driverModelPending, vBiosVersion, driverVersion)
 		metricCh <- infoMetric
 
@@ -224,7 +225,7 @@ func (e *GPUExporter) Collect(metricCh chan<- prometheus.Metric) {
 				continue
 			}
 
-			metricCh <- prometheus.MustNewConstMetric(metricInfo.desc, metricInfo.MType, num, uuid)
+			metricCh <- prometheus.MustNewConstMetric(metricInfo.desc, metricInfo.MType, num, uuid, index)
 		}
 	}
 }
