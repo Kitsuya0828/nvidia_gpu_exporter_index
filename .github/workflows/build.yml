@@ -6,7 +6,6 @@ on:
     branches:
       - master
       - renovate/**
-      - feature/add_gpu_index
     paths-ignore:
       - "**.md"
       - ".gitignore"
