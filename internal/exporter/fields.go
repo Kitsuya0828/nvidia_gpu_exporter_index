@@ -11,7 +11,7 @@ import (
 
 const (
 	uuidQField               QField = "uuid"
-	indexQField              QField = "index"
+	cudaidQField             QField = "cudaid"
 	nameQField               QField = "name"
 	driverModelCurrentQField QField = "driver_model.current"
 	driverModelPendingQField QField = "driver_model.pending"
@@ -34,6 +34,7 @@ var (
 		"name":                              "name",
 		"serial":                            "serial",
 		"uuid":                              "uuid",
+		"cudaid":							 "cudaid",
 		"pci.bus_id":                        "pci.bus_id",
 		"pci.domain":                        "pci.domain",
 		"pci.bus":                           "pci.bus",
