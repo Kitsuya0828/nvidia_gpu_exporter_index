@@ -43,7 +43,7 @@ var (
 	//nolint:gochecknoglobals
 	requiredFields = []requiredField{
 		{qField: uuidQField, label: "uuid"},
-		{qField: cudaidQField, label: "cudaid"},
+		{qField: indexQField, label: "index"},
 		{qField: nameQField, label: "name"},
 		{qField: driverModelCurrentQField, label: "driver_model_current"},
 		{qField: driverModelPendingQField, label: "driver_model_pending"},
@@ -201,7 +201,7 @@ func (e *GPUExporter) Collect(metricCh chan<- prometheus.Metric) {
 
 	for _, currentRow := range currentTable.Rows {
 		uuid := strings.TrimPrefix(strings.ToLower(currentRow.QFieldToCells[uuidQField].RawValue), "gpu-")
-		cudaid := hostname + "_" + currentRow.QFieldToCells[cudaidQField].RawValue
+		index := hostname + "_" + currentRow.QFieldToCells[indexQField].RawValue
 		name := currentRow.QFieldToCells[nameQField].RawValue
 		driverModelCurrent := currentRow.QFieldToCells[driverModelCurrentQField].RawValue
 		driverModelPending := currentRow.QFieldToCells[driverModelPendingQField].RawValue
@@ -209,7 +209,7 @@ func (e *GPUExporter) Collect(metricCh chan<- prometheus.Metric) {
 		driverVersion := currentRow.QFieldToCells[driverVersionQField].RawValue
 
 		infoMetric := prometheus.MustNewConstMetric(e.gpuInfoDesc, prometheus.GaugeValue,
-			1, uuid, cudaid, name, driverModelCurrent,
+			1, uuid, index, name, driverModelCurrent,
 			driverModelPending, vBiosVersion, driverVersion)
 		metricCh <- infoMetric
 
@@ -224,7 +224,7 @@ func (e *GPUExporter) Collect(metricCh chan<- prometheus.Metric) {
 				continue
 			}
 
-			metricCh <- prometheus.MustNewConstMetric(metricInfo.desc, metricInfo.MType, num, uuid, cudaid)
+			metricCh <- prometheus.MustNewConstMetric(metricInfo.desc, metricInfo.MType, num, uuid, index)
 		}
 	}
 }
@@ -328,7 +328,7 @@ func BuildQFieldToMetricInfoMap(prefix string, qFieldtoRFieldMap map[QField]RFie
 
 func BuildMetricInfo(prefix string, rField RField) MetricInfo {
 	fqName, multiplier := BuildFQNameAndMultiplier(prefix, rField)
-	desc := prometheus.NewDesc(fqName, string(rField), []string{"uuid", "cudaid"}, nil)
+	desc := prometheus.NewDesc(fqName, string(rField), []string{"uuid", "index"}, nil)
 
 	return MetricInfo{
 		desc:            desc,
