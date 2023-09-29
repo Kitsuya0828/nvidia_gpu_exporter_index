@@ -328,7 +328,7 @@ func BuildQFieldToMetricInfoMap(prefix string, qFieldtoRFieldMap map[QField]RFie
 
 func BuildMetricInfo(prefix string, rField RField) MetricInfo {
 	fqName, multiplier := BuildFQNameAndMultiplier(prefix, rField)
-	desc := prometheus.NewDesc(fqName, string(rField), []string{"uuid", "index"}, nil)
+	desc := prometheus.NewDesc(fqName, string(rField), []string{"uuid"}, nil)
 
 	return MetricInfo{
 		desc:            desc,
